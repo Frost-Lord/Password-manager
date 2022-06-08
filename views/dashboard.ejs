@@ -1,5 +1,5 @@
 <header>
-    <title>Login</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="./login.css">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -7,37 +7,10 @@
 </header>
 
 <script>
-    async function validateForm() {
-      let value1 = document.getElementById("username").value;
-      let value2 = document.getElementById("password").value;
-      
-        if (value1 == "") {
-            swal("error", "Please enter a username", "error")
-        }
-        if (value2 == "") {
-            swal("error", "Please enter a password", "error")
-        }
-
-        if(value1 && value2){
-            const post = await axios.post("/api/login/", {
-                name: value1 ? value1 : "",
-                password: value2 ? value2 : "",
-            }).catch(error => {
-                console.log(error);
-                swal("error", "Invalid detalis", "error")
-            });
-            if(post.status == 200){
-                swal("success", "Logging in!", "success")
-                
-                localStorage.setItem(
-                "LOCALHOST_KEY",
-                JSON.stringify(post.data.user)                
-              );
-            }
-        }
-
-    }
+ let user = JSON.parse(localStorage.getItem("LOCALHOST_KEY"));
+ console.log(user);
 </script>
+
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-2"></div>

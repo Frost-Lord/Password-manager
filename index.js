@@ -5,6 +5,7 @@ const path = require('path');
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const clc = require("cli-color");
+const UserSchema = require("./Database/Schema/User.js");
 app.use(express.urlencoded({ extended: false }));
 require('dotenv').config();
 app.use(express.json());
@@ -36,27 +37,41 @@ mongoose.connect("mongodb://localhost:27017/pwmanager", {
 }).catch((err) => {
     console.log('Unable to connect to MongoDB Database.\nError: ' + err)
 })
+mongoose.connection.on("err", err => {
+  console.error(`Mongoose connection error: \n ${err.stack}`);
+});
+mongoose.connection.on("disconnected", () => {
+  console.log("Mongoose connection disconnected");
+});
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// ROUTES ////////////////////////////////////////
 app.get("/", (req, res) => {
     res.render("login", {
         req: req,
-        localstaoragesave: process.env.LOCALHOST_KEY,
     });
 });
 
 app.get("/register", (req, res) => {
     res.render("register", {
         req: req,
-        localstaoragesave: process.env.LOCALHOST_KEY,
     });
+});
+
+app.get("/dashboard/:name", (req, res) => {
+  const name = req.params.name;
+
+  let userdata = UserSchema.findOne({ name: name });
+  if(!userdata) res.render({ error: "User not found" });
+
+  console.log(userdata.name)
+  res.render("register", {
+      req: req,
+  });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// API //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-const UserSchema = require("./Database/Schema/User.js");
-
 app.post("/api/users/", async (req, res) => {
     let {name , password , email} = req.body
     let user = await UserSchema.findOne({email: email})
@@ -69,7 +84,6 @@ app.post("/api/users/", async (req, res) => {
     await userr.save()
     return res.send(200, 'Valid Token provided');
 });
-
 app.post("/api/login/", async (req, res) => {
     let {name , password} = req.body
     let user = await UserSchema.findOne({name: name})
@@ -77,6 +91,20 @@ app.post("/api/login/", async (req, res) => {
     if(user.password !== password) return res.send(400, "Invalid password")
     if(user.password === password) {
     return res.json({ status: 200, user });
+    }
+});
+////////////////////////////////////////////////////////////////////////////////
+//Create a new string under UserSchema name string password string and save it to the database
+app.post("/api/create/", async (req, res) => {
+    let {name , password} = req.body
+    let user = await UserSchema.findOne({name: name})
+    if(!user) return res.send(400, "User does not exist")
+    if(user.password !== password) return res.send(400, "Invalid password")
+    if(user.password === password) {
+      
+
+
+
     }
 });
 

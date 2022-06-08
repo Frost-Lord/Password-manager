@@ -1,4 +1,5 @@
 UserSchema = require("./Schema/User.js"),
+PasswordSchema = require("./Schema/Passwords"),
 
 module.exports.fetchGuild = async function(key){
 
@@ -17,3 +18,18 @@ module.exports.fetchGuild = async function(key){
         return guildDB;
     }
 };
+module.export.fetchUser = async function(key){
+    let userDB = await PasswordSchema.findOne({ name: key });
+    if(userDB){
+        return userDB;
+    }
+    else{
+        userDB = new PasswordSchema({
+            name: key,
+            password: "false",
+            registeredAt: Date.now()
+        })
+        await userDB.save().catch(err => console.log(err));
+        return userDB;
+    }
+}
