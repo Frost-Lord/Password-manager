@@ -1,0 +1,25 @@
+{
+  "name": "password-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "body-parser": "^1.20.0",
+    "cli-color": "^2.0.2",
+    "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "memorystore": "^1.6.7",
+    "mongoose": "^6.3.6",
+    "path": "^0.12.7",
+    "url": "^0.11.0"
+  }
+}
