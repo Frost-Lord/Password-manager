@@ -38,7 +38,7 @@ function App() {
     console.log(dataa);
 
     const post = await axios
-      .post("http://localhost:7777/api/login/", {
+      .post("localhost:7777/api/login/", {
         name: username ? username : "",
         password: password ? password : "",
       })

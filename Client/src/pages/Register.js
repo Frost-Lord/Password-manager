@@ -42,8 +42,8 @@ function App() {
     if(dataa == false){
       toast.error(toastOptions);
     }
-    
-    const post = await axios.post("http://120.154.2.65/api/users/", {
+
+    const post = await axios.post("/api/users/", {
       name: username ? username : "",
       password: password ? password : "",
       email: email ? email : "",

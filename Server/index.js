@@ -52,6 +52,7 @@ app.get("/dashboard/:name", (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 app.post("/api/users/", async (req, res) => {
     let {name , password , email} = req.body
+    if(!name || !password || !email) return res.status(400).send({ error: "Please fill all fields" });
     console.log(name, password, email)
     let user = await UserSchema.findOne({email: email})
     if(user) return res.send(400, "User already exists")
