@@ -60,16 +60,20 @@ app.post("/api/auth/register", async (req, res) => {
     await localuser.save()
     return res.json({localuser});
 });
+
 app.post("/api/auth/login", async (req, res) => {
     let {name , password} = req.body
     console.log(name, password)
     let localuser = await UserSchema.findOne({name: name})
-    if(!localuser) return res.send(400, "User does not exist")
+    if(localuser) {
+      console.log("User found")
     if(localuser.password !== password) return res.send(400, "Invalid password")
     if(localuser.password === password) {
     console.log("User found")
-    return res.json({ status: 200, localuser });
+    return res.json({localuser});
+    }
     } else {
+    console.log("Invalid password")
     return res.send(400, "Invalid password")
     }
 });

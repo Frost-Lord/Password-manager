@@ -51,7 +51,7 @@ function App() {
       console.log(error);
       toast.success("Username already exists", toastOptions);
      })
-
+      console.log(data);
       if(data.status == 200){
         toast.success("Successfully registered", toastOptions);
         localStorage.setItem("LOCALHOST_KEY", JSON.stringify(data.localuser));
