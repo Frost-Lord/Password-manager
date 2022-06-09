@@ -1,20 +1,10 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const path = require('path');
-const session = require("express-session");
-const bodyParser = require("body-parser");
 const clc = require("cli-color");
 const UserSchema = require("./Database/Schema/User.js");
 app.use(express.urlencoded({ extended: false }));
 require('dotenv').config();
-app.use(express.json());
-app.engine(".ejs", require("ejs").__express);
-app.set("view engine", "ejs");
-app.use(express.static(path.join(__dirname, "/public")));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set("views", __dirname + "/views");
-
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -45,18 +35,6 @@ mongoose.connection.on("disconnected", () => {
 });
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// ROUTES ////////////////////////////////////////
-app.get("/", (req, res) => {
-    res.render("login", {
-        req: req,
-    });
-});
-
-app.get("/register", (req, res) => {
-    res.render("register", {
-        req: req,
-    });
-});
-
 app.get("/dashboard/:name", (req, res) => {
   const name = req.params.name;
 
@@ -74,6 +52,7 @@ app.get("/dashboard/:name", (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 app.post("/api/users/", async (req, res) => {
     let {name , password , email} = req.body
+    console.log(name, password, email)
     let user = await UserSchema.findOne({email: email})
     if(user) return res.send(400, "User already exists")
     let userr = new UserSchema({
