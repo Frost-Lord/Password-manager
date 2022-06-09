@@ -50,24 +50,27 @@ app.get("/dashboard/:name", (req, res) => {
 app.post("/api/auth/register", async (req, res) => {
     let {name , password , email} = req.body
     if(!name || !password || !email) return res.status(400).send({ error: "Please fill all fields" });
-    console.log(name, password, email)
     let user = await UserSchema.findOne({email: email})
     if(user) return res.send(400, "User already exists")
-    let userr = new UserSchema({
+    let localuser = new UserSchema({
         name: name,
         password: password,
         email: email
     })
-    await userr.save()
-    return res.json({ status: 200, userr });
+    await localuser.save()
+    return res.json({localuser});
 });
-app.post("/api/login/", async (req, res) => {
+app.post("/api/auth/login", async (req, res) => {
     let {name , password} = req.body
-    let user = await UserSchema.findOne({name: name})
-    if(!user) return res.send(400, "User does not exist")
-    if(user.password !== password) return res.send(400, "Invalid password")
-    if(user.password === password) {
-    return res.json({ status: 200, user });
+    console.log(name, password)
+    let localuser = await UserSchema.findOne({name: name})
+    if(!localuser) return res.send(400, "User does not exist")
+    if(localuser.password !== password) return res.send(400, "Invalid password")
+    if(localuser.password === password) {
+    console.log("User found")
+    return res.json({ status: 200, localuser });
+    } else {
+    return res.send(400, "Invalid password")
     }
 });
 ////////////////////////////////////////////////////////////////////////////////

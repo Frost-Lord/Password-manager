@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, Link } from "react-router-dom";
+import { loginRoute } from "./api/routes";
 import styled from "styled-components";
 import axios from "axios";
 import swal from "sweetalert";
@@ -19,6 +20,12 @@ function App() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("LOCALHOST_KEY")) {
+      navigate("/chat");
+    }
+  }, []);
 
   const validateForm = (username, password) => {
     if (username == "") {
@@ -37,28 +44,19 @@ function App() {
     let dataa = validateForm(username, password);
     console.log(dataa);
 
-    const post = await axios
-      .post("localhost:7777/api/login/", {
-        name: username ? username : "",
-        password: password ? password : "",
-      })
-      .catch((error) => {
-        console.log(error);
-        swal("error", "Invalid detalis", "error");
-      });
-    if (post.status == 200) {
-      swal("success", "Logging in!", "success");
+    const data = await axios.post(loginRoute, {
+      name: username ? username : "",
+      password: password ? password : "",
+     }).catch(error => {
+      console.log(error);
+      toast.success("Username already exists", toastOptions);
+     })
 
-      localStorage.setItem("LOCALHOST_KEY", JSON.stringify(post.data.user));
-      if (post.status === true) {
-        localStorage.setItem(
-          process.env.REACT_APP_LOCALHOST_KEY,
-          JSON.stringify(post.user)
-        );
+      if(data.status == 200){
+        toast.success("Successfully registered", toastOptions);
+        localStorage.setItem("LOCALHOST_KEY", JSON.stringify(data.localuser));
+        navigate("/chat");
       }
-
-      navigate("/chat");
-    }
 
     console.log("Username 👉️", username);
     console.log("Passowrd 👉️", password);

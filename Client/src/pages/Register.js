@@ -58,15 +58,12 @@ function App() {
       console.log(error);
       toast.success("Username already exists", toastOptions);
      })
-     console.log(data);
-     console.log(data.userr.name)
-     if (data.status === true) {
-      localStorage.setItem(
-        "LOCALHOST_KEY",
-        JSON.stringify(data.userr)
-      );
-      navigate("/");
-    }
+
+      if(data.status == 200){
+        toast.success("Successfully registered", toastOptions);
+        localStorage.setItem("LOCALHOST_KEY", JSON.stringify(data.localuser));
+        navigate("/chat");
+      }
 
     console.log('Username 👉️', username);
     console.log('Passowrd 👉️', password);
