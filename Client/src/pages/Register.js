@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
+import { registerRoute } from "../api/routes";
 
 function App() {
   const navigate = useNavigate();
@@ -19,6 +20,12 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    if (localStorage.getItem("LOCALHOST_KEY")) {
+      navigate("/");
+    }
+  }, []);
 
   const validateForm = (username, password) => {
     if (username == "") {
@@ -43,7 +50,7 @@ function App() {
       toast.error(toastOptions);
     }
 
-    const post = await axios.post("/api/users/", {
+    const data = await axios.post(registerRoute, {
       name: username ? username : "",
       password: password ? password : "",
       email: email ? email : "",
@@ -51,14 +58,14 @@ function App() {
       console.log(error);
       toast.success("Username already exists", toastOptions);
      })
-     console.log(post);
-    if (post.status === true) {
-      toast.success("Login Successful.", toastOptions);
+     console.log(data);
+     console.log(data.userr.name)
+     if (data.status === true) {
       localStorage.setItem(
-        process.env.REACT_APP_LOCALHOST_KEY,
-        JSON.stringify(post.user)
+        "LOCALHOST_KEY",
+        JSON.stringify(data.userr)
       );
-      navigate("/chat");
+      navigate("/");
     }
 
     console.log('Username 👉️', username);

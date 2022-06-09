@@ -2,15 +2,12 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const clc = require("cli-color");
+const cors = require("cors");
 const UserSchema = require("./Database/Schema/User.js");
 app.use(express.urlencoded({ extended: false }));
 require('dotenv').config();
+app.use(cors());
 app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
 app.use(function (err, req, res, next) {
   if (!err.status) console.error(err);
   makeError(res, err.status || 500);
@@ -50,7 +47,7 @@ app.get("/dashboard/:name", (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// API //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-app.post("/api/users/", async (req, res) => {
+app.post("/api/auth/register", async (req, res) => {
     let {name , password , email} = req.body
     if(!name || !password || !email) return res.status(400).send({ error: "Please fill all fields" });
     console.log(name, password, email)
@@ -62,7 +59,7 @@ app.post("/api/users/", async (req, res) => {
         email: email
     })
     await userr.save()
-    return res.send(200, 'Valid Token provided');
+    return res.json({ status: 200, userr });
 });
 app.post("/api/login/", async (req, res) => {
     let {name , password} = req.body
