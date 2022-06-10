@@ -30,7 +30,6 @@ function App() {
   useEffect(async () => {
       try {
         const dataa = JSON.parse(localStorage.getItem("LOCALHOST_KEY"));
-        console.log(dataa);
         const response = await axios.post(Getpassdata, {
           name: dataa.name ? dataa.name : "",
           email: dataa.email ? dataa.email : "",
@@ -38,7 +37,6 @@ function App() {
           console.log(error);
           toast.error("Error getting your data!", toastOptions);
          })
-        console.log(response);
       }
       catch (error) {
         console.log(error);
@@ -50,6 +48,14 @@ function App() {
   /////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////
 
+  async function getdata() {
+    try {
+      const dataa = JSON.parse(localStorage.getItem("LOCALHOST_KEY"));
+      return await dataa;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
   return (
@@ -59,6 +65,25 @@ function App() {
       <header className="App-header">
       <h1>Spark Flow</h1>
       </header>
+
+      <div className="sidebar">
+        <div className="sidebar-header">
+          <h3>User Data</h3>
+
+          <datauser>
+            <p>Name: {getdata().name}</p>
+            <script>
+              //get the response from getdata
+              const dataa = JSON.parse(localStorage.getItem("LOCALHOST_KEY"));
+              console.log(dataa);
+              
+            </script>
+          </datauser>
+          <datauser>
+            <p>Email: {getdata().name}</p>
+          </datauser>
+          </div>
+        </div>
     </div>
     
     </FormContainer>

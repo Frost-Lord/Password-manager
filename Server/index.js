@@ -64,7 +64,6 @@ app.post("/api/auth/login", async (req, res) => {
     return res.send(400, "Invalid password")
     }
 });
-////////////////////////////////////////////////////////////////////////////////
 app.post("/api/passdata", async (req, res) => {
     let {name , email} = req.body
     let user = await UserSchema.findOne({email: email})
@@ -80,9 +79,11 @@ app.post("/api/passdata", async (req, res) => {
     }
 });
 ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////Create password//////////////////////////////////
 app.post("/api/passdata/create", async (req, res) => {
     let {email, setname, setpassword} = req.body
-    let user = await PasswordsSchema.findOne({email: email})
+    let user = await UserSchema.findOne({email: email})
     if(!user) return res.send(400, "User does not exist")
     if(user.email !== email) return res.send(400, "Invalid password")
     if(user.email === email) {
