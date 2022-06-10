@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
+import { Getpassdata } from "../api/routes";
 
 function App() {
   const navigate = useNavigate();
@@ -22,6 +23,32 @@ function App() {
     }
   }, []);
   
+
+  ////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////// API //////////////////////////////////////////
+
+  useEffect(async () => {
+      try {
+        const dataa = JSON.parse(localStorage.getItem("LOCALHOST_KEY"));
+        console.log(dataa);
+        const response = await axios.post(Getpassdata, {
+          name: dataa.name ? dataa.name : "",
+          email: dataa.email ? dataa.email : "",
+         }).catch(error => {
+          console.log(error);
+          toast.error("Error getting your data!", toastOptions);
+         })
+        console.log(response);
+      }
+      catch (error) {
+        console.log(error);
+      }
+  }, []);
+
+
+
+  /////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////
 
 
 
