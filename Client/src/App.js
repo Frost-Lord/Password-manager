@@ -21,11 +21,7 @@ function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    if (localStorage.getItem("LOCALHOST_KEY")) {
-      navigate("/chat");
-    }
-  }, []);
+
 
   const validateForm = (username, password) => {
     if (username == "") {
@@ -49,13 +45,15 @@ function App() {
       password: password ? password : "",
      }).catch(error => {
       console.log(error);
-      toast.success("Username already exists", toastOptions);
+      toast.success("Invalid username or password!", toastOptions);
      })
       console.log(data);
+      //console.log data localuser
+      console.log(data.data.localuser);
       if(data.status == 200){
         toast.success("Successfully registered", toastOptions);
-        localStorage.setItem("LOCALHOST_KEY", JSON.stringify(data.localuser));
-        navigate("/chat");
+        localStorage.setItem("LOCALHOST_KEY", JSON.stringify(data.data.localuser));
+        navigate(`/dashboard/${username}`);
       }
 
     console.log("Username 👉️", username);
