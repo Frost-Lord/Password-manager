@@ -82,14 +82,16 @@ app.post("/api/passdata", async (req, res) => {
         console.log(clc.yellow("Event [Data REQ]: " + user.name))
         let data = await PasswordsSchema.find({email: email})
 
-        let mappeddata = data.map(item => {
-          return {
-            name: item.name,
-            password: item.password,
-          }
-        })
-        console.log(mappeddata)
-        return res.send(mappeddata);
+        //create an array of json objects
+        let arraydata = []
+        for(let i = 0; i < data.length; i++) {
+          arraydata.push({
+            name: data[i].name,
+            password: data[i].password,
+          })
+        }
+        console.log(arraydata)
+        return res.json({arraydata});
 
 
       }

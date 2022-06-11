@@ -40,6 +40,8 @@ function App() {
           toast.error("Error getting your data!", toastOptions);
         });
         console.log(data);
+        //get the array of passwords and set it to the state
+        console.log(data.data);
         
       setArraydata(data);
     } catch (error) {
