@@ -5,6 +5,12 @@ const clc = require("cli-color");
 const cors = require("cors");
 const UserSchema = require("./Database/Schema/User.js");
 const PasswordsSchema = require("./Database/Schema/passwords.js");
+const redis = require('redis');
+
+const client = redis.createClient("127.0.0.1", "8080");
+client.on('connect', function() {
+  console.log('Connected!');
+});
 
 app.use(express.urlencoded({ extended: false }));
 require('dotenv').config();
