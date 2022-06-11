@@ -55,10 +55,6 @@ function App() {
         localStorage.setItem("LOCALHOST_KEY", JSON.stringify(data.data.localuser));
         navigate(`/dashboard/${username}`);
       }
-
-    console.log("Username 👉️", username);
-    console.log("Passowrd 👉️", password);
-
     setUsername("");
     setPassword("");
   };

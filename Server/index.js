@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const clc = require("cli-color");
 const cors = require("cors");
 const UserSchema = require("./Database/Schema/User.js");
-const PasswordsSchema = require("./Database/Schema/passwords");
+const PasswordsSchema = require("./Database/Schema/passwords.js");
 
 app.use(express.urlencoded({ extended: false }));
 require('dotenv').config();
@@ -64,38 +64,53 @@ app.post("/api/auth/login", async (req, res) => {
     return res.send(400, "Invalid password")
     }
 });
+
+////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////// Get passwords ////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 app.post("/api/passdata", async (req, res) => {
     let {name , email} = req.body
     let user = await UserSchema.findOne({email: email})
-    if(!user) return res.send(400, "User does not exist")
-    if(user.email !== email) return res.send(400, "Invalid password")
-    if(user.email === email) {
-      console.log(clc.yellow("Event [Data REQ]: " + user.name))
-      let getdata = await UserSchema.findOne({email: email})
-      
+    if(user) {
+      if(user.email === email) {
+        console.log(clc.yellow("Event [Data REQ]: " + user.name))
+        let data = await PasswordsSchema.find({email: email})
+
+        let mappeddata = data.map(item => {
+          return {
+            name: item.name,
+            password: item.password,
+          }
+        })
+        console.log(mappeddata)
+        return res.send(mappeddata);
 
 
-
+      }
+    } else {
+      return res.send(400, "Invalid Data provided!")
     }
+
 });
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////Create password//////////////////////////////////
-app.post("/api/passdata/create", async (req, res) => {
+app.post("/api/create", async (req, res) => {
     let {email, setname, setpassword} = req.body
+    console.log(email, setname, setpassword)
     let user = await UserSchema.findOne({email: email})
     if(!user) return res.send(400, "User does not exist")
     if(user.email !== email) return res.send(400, "Invalid password")
     if(user.email === email) {
       console.log(clc.yellow("Event [Data CREATE]: " + user.name))
 
-      let getdata = await PasswordsSchema.findOne({email: email})
-      let newdata = new UserSchema({
+      let newdata = new PasswordsSchema({
+        email: email,
         name: setname,
-        password: setpassword,
+        password: setpassword
       })
       await newdata.save()
-
+      return res.send(200, "Approved")
     }
 });
 

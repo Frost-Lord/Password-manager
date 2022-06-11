@@ -65,10 +65,6 @@ function App() {
         navigate(`/dashboard/${username}`);
       }
 
-    console.log('Username 👉️', username);
-    console.log('Passowrd 👉️', password);
-    console.log('Email 👉️', password);
-
     setUsername('');
     setPassword('');
     setEmail('');
