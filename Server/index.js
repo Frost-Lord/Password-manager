@@ -5,12 +5,18 @@ const clc = require("cli-color");
 const cors = require("cors");
 const UserSchema = require("./Database/Schema/User.js");
 const PasswordsSchema = require("./Database/Schema/passwords.js");
-const redis = require('redis');
+const { createClient } = require('redis');
 
-const client = redis.createClient("127.0.0.1", "8080");
-client.on('connect', function() {
-  console.log('Connected!');
+const client = createClient({
+  url: "redis://Fighting35a@64.44.152.39:6878",
 });
+
+(async () => {
+    await client.connect();
+})();
+
+client.on('connect', () => console.log('::> Redis Client Connected'));
+client.on('error', (err) => console.log('<:: Redis Client Error', err));
 
 app.use(express.urlencoded({ extended: false }));
 require('dotenv').config();
@@ -75,29 +81,26 @@ app.post("/api/auth/login", async (req, res) => {
 ///////////////////////////////// Get passwords ////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 app.post("/api/passdata", async (req, res) => {
-    let {name , email} = req.body
-    let user = await UserSchema.findOne({email: email})
-    if(user) {
-      if(user.email === email) {
-        console.log(clc.yellow("Event [Data REQ]: " + user.name))
-        let data = await PasswordsSchema.find({email: email})
-
-        //create an array of json objects
-        let arraydata = []
-        for(let i = 0; i < data.length; i++) {
-          arraydata.push({
-            name: data[i].name,
-            password: data[i].password,
-          })
+  let {name , email} = req.body
+  let user = await UserSchema.findOne({email: email})
+  if(user) {
+    if(user.email === email) {
+      console.log(clc.yellow("Event [Data REQ]: " + user.name))
+      let data = await PasswordsSchema.find({email: email})
+      let mappeddata = data.map(item => {
+        return {
+          name: item.name,
+          password: item.password,
         }
-        console.log(arraydata)
-        return res.json({arraydata});
+      })
+      console.log(mappeddata)
+      return res.send(200, mappeddata);
 
 
-      }
-    } else {
-      return res.send(400, "Invalid Data provided!")
     }
+  } else {
+    return res.send(400, "Invalid Data provided!")
+  }
 
 });
 ////////////////////////////////////////////////////////////////////////////////

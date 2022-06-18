@@ -27,10 +27,10 @@ function App() {
   ////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////// API //////////////////////////////////////////
   let [arraydata, setArraydata] = useState([]);
-  useEffect(() => {
+  useEffect(async () => {
     try {
       const dataa = JSON.parse(localStorage.getItem("LOCALHOST_KEY"));
-      const data = axios
+      const data = await axios
         .post(Getpassdata, {
           name: dataa.name ? dataa.name : "",
           email: dataa.email ? dataa.email : "",
@@ -40,9 +40,7 @@ function App() {
           toast.error("Error getting your data!", toastOptions);
         });
         console.log(data);
-        //get the array of passwords and set it to the state
         console.log(data.data);
-        
       setArraydata(data);
     } catch (error) {
       console.log(error);
@@ -145,8 +143,16 @@ function App() {
             <input type="submit" value="Submit" />
           </form2>
         </div>
-
-
+        {arraydata.length > 0 ? (
+      arraydata.map((data) => {
+        <div className="main">
+        <a>Name: {data.name}</a>
+        <a>Password: {data.password}</a>
+      </div>
+      })
+    ) : (
+      <div>No data found...</div>
+    )}
       </FormContainer>
       <ToastContainer />
     </>
